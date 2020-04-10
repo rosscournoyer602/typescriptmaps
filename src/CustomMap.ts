@@ -1,9 +1,9 @@
-interface Place {
-  description: string;
+export interface Place {
   location: {
     lat: number;
     lng: number;
   };
+  markerContent(): string;
 }
 
 export class CustomMap {
@@ -14,9 +14,14 @@ export class CustomMap {
   }
 
   addMarker(place: Place): void {
-    new google.maps.Marker({ 
+    const marker = new google.maps.Marker({ 
       map: this.googleMap, 
       position: { lat: place.location.lat, lng: place.location.lng } 
+    });
+
+    marker.addListener('click', () => {
+      const infoWindow = new google.maps.InfoWindow({ content: place.markerContent() });
+      infoWindow.open(this.googleMap, marker);
     });
   }
 
